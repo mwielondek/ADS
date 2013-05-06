@@ -2,6 +2,10 @@ package kth.csc.inda.ads;
 
 import java.awt.Color;
 
+/**
+ * @author Jesper Simonsson
+ */
+
 public class Bomb implements ActAndDraw {
 	private Color color = Color.BLACK;
 	
