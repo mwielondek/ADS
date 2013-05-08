@@ -25,7 +25,8 @@ public class NSnake {
 	// Controls to steer the snake with.
 	private Controls controls;
 
-	public NSnake(String name, Color color, NField field, Location startLoc, Direction direction, Controls controls, int maxLength) {
+	public NSnake(String name, Color color, NField field, Location startLoc,
+			Direction direction, Controls controls, int maxLength) {
 		this.name = name;
 		this.color = color;
 		this.field = field;
@@ -33,7 +34,7 @@ public class NSnake {
 		this.maxLength = maxLength;
 		this.direction = direction;
 		this.isAlive = true;
-		
+
 		// Add the starting segment of the snake.
 		body.addFirst(new NSnakeSeg(this, startLoc));
 	}
@@ -53,7 +54,7 @@ public class NSnake {
 	public void setColor(Color color) {
 		this.color = color;
 	}
-	
+
 	public Controls getControls() {
 		return controls;
 	}
@@ -64,7 +65,7 @@ public class NSnake {
 	public int getMaxLength() {
 		return maxLength;
 	}
-	
+
 	/**
 	 * @return Name of the snake.
 	 */
@@ -74,19 +75,22 @@ public class NSnake {
 
 	/**
 	 * Sets the maximum allowed length of the snake.
-	 * @param maxLength The maximum allowed length of the snake.
+	 * 
+	 * @param maxLength
+	 *            The maximum allowed length of the snake.
 	 */
 	public void setMaxLength(int maxLength) {
 		this.maxLength = maxLength;
 	}
-	
+
 	private void changeDirection(Direction direction) {
 		this.direction = direction;
 		turning = true;
 	}
-	
+
 	/**
 	 * Sets a new direction if a new direction has not already been set.
+	 * 
 	 * @param newDirection
 	 * @return True if possible to change direction, otherwise false.
 	 */
@@ -150,16 +154,18 @@ public class NSnake {
 					return false;
 				}
 			}
-		} 
+		}
 		// When the direction has already been changed.
 		return false;
 	}
 
 	/**
+	 * Move the snake and return true if a power up was picked.
 	 * 
-	 * @return
+	 * @return true if power up is picked otherwise false.
 	 */
-	public void move() {
+	public boolean move() {
+		boolean powUpCollected = false;
 		Location loc = body.getFirst().getLoc();
 		Location newLoc;
 		int row = loc.getRow();
@@ -180,34 +186,39 @@ public class NSnake {
 		}
 		// Reset the turning
 		turning = false;
-		
+
 		// Checks for if the next move is within the field.
 		if (col < 0 || col >= field.getDepth() || row < 0
 				|| row >= field.getWidth()) {
 			kill("crashed into a wall");
-			return; 
+			return powUpCollected; // false since no powerup is collected
 		}
-		
+
 		newLoc = new Location(row, col);
 
 		// Can we add it to the spot we want to?
 		ActAndDraw actor;
 		if ((actor = field.getObjectAt(newLoc)) != null) {
-			if(!actor.act(this)) {
-				// Return if the actor method does not want the snake to move any further.
-				return;
+			// check if something is placed at the next lcation.
+			if (!actor.act(this)) {
+				// Return if the actor method does not want the snake to move
+				// any further.
+				return powUpCollected; // false since the actor is dead
+			} else {
+				powUpCollected = true; // power up was collected
 			}
 		}
 
 		// Add the new location to snakes body.
 		addFirst(newLoc);
 
-		if (body.size() > maxLength) {
-			// Remove and the corresponding segment and field.
+		while (body.size() > maxLength) {
+			// Remove the corresponding segment and field if the snake is to long.
 			removeLast();
 		}
+		return powUpCollected;
 	}
-	
+
 	private void addFirst(Location loc) {
 		NSnakeSeg newSeg = new NSnakeSeg(this, loc);
 		body.addFirst(newSeg);
@@ -217,7 +228,7 @@ public class NSnake {
 	private void removeLast() {
 		field.clear(body.removeLast().getLoc());
 	}
-	
+
 	/**
 	 * Sets the snake to be dead.
 	 */
@@ -225,7 +236,7 @@ public class NSnake {
 		isAlive = false;
 		this.causeOfDeath = causeOfDeath;
 	}
-	
+
 	/**
 	 * @return True if alive, otherwise false.
 	 */
@@ -239,7 +250,7 @@ public class NSnake {
 	public String toString() {
 		if (isAlive()) {
 			return name + ", " + body.getFirst().getLoc() + " is alive.";
-		} 
+		}
 		return name + ", " + body.getFirst().getLoc() + " " + causeOfDeath;
 	}
 

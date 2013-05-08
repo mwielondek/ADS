@@ -6,27 +6,22 @@ package kth.csc.inda.ads;
 import java.awt.Color;
 
 /**
+ * An interface class for the power up objects in the game.
  * @author Janne
- *
+ * 
  */
-public class Powerup implements ActAndDraw {
+interface Powerup extends ActAndDraw {
 
-	/* (non-Javadoc)
-	 * @see kth.csc.inda.ads.ActAndDraw#act(kth.csc.inda.ads.NSnake)
+	/**
+	 * A way for the powerup to interact with the snake that takes it.
 	 */
 	@Override
-	public boolean act(NSnake snake) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	public boolean act(NSnake snake);
 
-	/* (non-Javadoc)
-	 * @see kth.csc.inda.ads.ActAndDraw#getColor()
+	/**
+	 * returns the color of the power up
 	 */
 	@Override
-	public Color getColor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public Color getColor();
 
 }

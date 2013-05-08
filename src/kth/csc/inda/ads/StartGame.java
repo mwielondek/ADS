@@ -6,6 +6,7 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,11 +22,13 @@ public class StartGame {
 	private static final int width = 100;
 	private static final int snakeStartLength = 5;
 	private static int nrOfPlayers;
+	private static int numPowerUps; // set number of powerups
 
 	public static void main(String[] args) throws InterruptedException {
 
 		AskPlay("Do you want to play \"Achtung die Schlange\"");
 		nrOfPlayers = AskNumPlayers();
+		numPowerUps = nrOfPlayers + 2;
 
 		field = new NField(height, width);
 		view = new View(height, width);
@@ -42,6 +45,7 @@ public class StartGame {
 			// Ask questions to play another round.
 			AskPlay("Play again?");
 			nrOfPlayers = AskNumPlayers();
+			numPowerUps = nrOfPlayers + 2;
 		}
 	}
 
@@ -91,6 +95,18 @@ public class StartGame {
 		// Add the players to the view.
 		view.SetPlayers(players);
 
+		// Place a set number of food objects on the field
+		Random rand = new Random();
+		for (int i = 0; i < numPowerUps; i++) {
+			Location temp = new Location(rand.nextInt(width),
+					rand.nextInt(height));
+			if (field.getObjectAt(temp) == null) {
+				field.place(new PowUpFood(), temp);
+			} else {
+				i--;
+			}
+		}
+
 		// Add enough labels for the specified amount of players.
 		JPanel panel = new JPanel(new FlowLayout());
 		panel.setBackground(Color.BLACK);
@@ -104,7 +120,7 @@ public class StartGame {
 		Container container = view.getContentPane();
 		container.add(panel, BorderLayout.SOUTH);
 		view.pack(); // To make it look good.
-		
+
 		// Start a 5 second countdown before the game starts.
 		for (int j = 5; j > 0; j--) {
 			info.setText("New game starts in: " + j);
@@ -112,22 +128,38 @@ public class StartGame {
 			Thread.sleep(1000);
 		}
 		info.setText("Go!");
-		
+
 		for (;;) {
-			if(gameLoop()) {
+			if (gameLoop()) {
 				break;
 			}
 		}
 	}
-	
+
 	/**
 	 * Call it to move the snakes once. Also handles all the logic.
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	private static boolean gameLoop() throws InterruptedException {
 		for (int i = 0; i < players.size(); i++) {
 			NSnake p = players.get(i);
-			p.move();
+			if (p.move()) {// Check if player was moved onto a power up
+				// Try to place a new power up on the field. If one can't be
+				// placed in 5 tries give up.
+				Random rand = new Random();
+				int n = 0;
+				boolean placed = false;
+				while (!placed && n < 5) {
+					Location temp = new Location(rand.nextInt(width),
+							rand.nextInt(height));
+					if (field.getObjectAt(temp) != null) {
+						n++;
+					} else {
+						field.place(new PowUpFood(), temp);
+					}
+				}
+			}
 
 			System.out.println(p);
 			labels.get(i).setText(p.toString());
@@ -148,40 +180,44 @@ public class StartGame {
 		} else if (players.size() == 1 && nrOfPlayers != 1) {
 			// Do something as someone has won.
 			JOptionPane.showMessageDialog(view, players.get(0).getName()
-					+ " has won!", ":)",
-					JOptionPane.INFORMATION_MESSAGE);
+					+ " has won!", ":)", JOptionPane.INFORMATION_MESSAGE);
 			return true;
 		}
 		return false;
 	}
 
-	
 	/**
 	 * Creates the players to be used.
-	 * @param field 	  The field the snakes will be placed on.
-	 * @param nrOfPlayers The number of players. (1-4).
-	 * @return 			  The created players.
+	 * 
+	 * @param field
+	 *            The field the snakes will be placed on.
+	 * @param nrOfPlayers
+	 *            The number of players. (1-4).
+	 * @return The created players.
 	 */
 	private static ArrayList<NSnake> createPlayers(NField field, int nrOfPlayers) {
 		ArrayList<NSnake> players = new ArrayList<NSnake>();
 		switch (nrOfPlayers) {
 		case 4:
 			players.add(new NSnake("YELLOW", Color.YELLOW, field, new Location(
-					height - 10, 10), Direction.RIGHT, new Controls(KeyEvent.VK_V,
-					KeyEvent.VK_SPACE, KeyEvent.VK_C, KeyEvent.VK_B), snakeStartLength));
+					height - 10, 10), Direction.RIGHT, new Controls(
+					KeyEvent.VK_V, KeyEvent.VK_SPACE, KeyEvent.VK_C,
+					KeyEvent.VK_B), snakeStartLength));
 		case 3:
 			players.add(new NSnake("BLUE", Color.BLUE, field, new Location(10,
 					width - 10), Direction.LEFT, new Controls(KeyEvent.VK_I,
-					KeyEvent.VK_K, KeyEvent.VK_J, KeyEvent.VK_L), snakeStartLength));
+					KeyEvent.VK_K, KeyEvent.VK_J, KeyEvent.VK_L),
+					snakeStartLength));
 		case 2:
-			players.add(new NSnake("RED", Color.RED, field,
-					new Location(height - 10, width -10), Direction.LEFT, new Controls(
-							KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A,
+			players.add(new NSnake("RED", Color.RED, field, new Location(
+					height - 10, width - 10), Direction.LEFT,
+					new Controls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A,
 							KeyEvent.VK_D), snakeStartLength));
 		case 1:
-			players.add(new NSnake("GREEN", Color.GREEN, field, new Location(
-					10, 10), Direction.RIGHT, new Controls(KeyEvent.VK_UP,
-					KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT), snakeStartLength));
+			players.add(new NSnake("MAGENTA", Color.MAGENTA, field,
+					new Location(10, 10), Direction.RIGHT, new Controls(
+							KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT,
+							KeyEvent.VK_RIGHT), snakeStartLength));
 			break;
 		default:
 			throw new IllegalArgumentException(nrOfPlayers
