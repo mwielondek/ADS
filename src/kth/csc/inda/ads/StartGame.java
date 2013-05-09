@@ -1,16 +1,15 @@
 package kth.csc.inda.ads;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.event.KeyEvent;
+import java.awt.Component;
+
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
+import javax.swing.border.*;
 
 public class StartGame {
 	private static View view;
@@ -18,56 +17,147 @@ public class StartGame {
 	private static ArrayList<JLabel> labels;
 	private static NField field;
 	private static JLabel info;
-	private static final int height = 100;
-	private static final int width = 100;
+	private static DefaultListModel model;
+	private static CardLayout cl;
+	private static final int height = 50;
+	private static final int width = 50;
 	private static final int snakeStartLength = 5;
 	private static int nrOfPlayers;
 	private static int numPowerUps; // set number of powerups
 
 	public static void main(String[] args) throws InterruptedException {
 
-		AskPlay("Do you want to play \"Achtung die Schlange\"");
-		nrOfPlayers = AskNumPlayers();
-		numPowerUps = nrOfPlayers + 2;
-
-		field = new NField(height, width);
 		view = new View(height, width);
-		info = new JLabel("Test");
+		Container container = view.getContentPane();
+		JPanel p1 = new JPanel(new FlowLayout());
+		JPanel p2 = new JPanel(new FlowLayout());
+		p1.setBackground(Color.BLACK);
+		p2.setBackground(Color.BLACK);
+		container.add(p1, BorderLayout.NORTH);
+		container.add(p2, BorderLayout.SOUTH);
+		info = new JLabel("JJM present...");
 		info.setForeground(Color.WHITE);
-		JPanel p = new JPanel(new FlowLayout());
-		p.setBackground(Color.BLACK);
-		p.add(info);
-		view.getContentPane().add(p, BorderLayout.NORTH);
+		p1.add(info);
 
-		for (;;) {
-			newGame();
+		// create main menu
+		JPanel startView = new JPanel(new BorderLayout());
 
-			// Ask questions to play another round.
-			AskPlay("Play again?");
-			nrOfPlayers = AskNumPlayers();
-			numPowerUps = nrOfPlayers + 2;
+		// add logo
+		ImageIcon logoPic = new ImageIcon("ads.png");
+		JLabel logo = new JLabel(logoPic);
+		startView.add(logo, BorderLayout.NORTH);
+
+		// add player panel
+		JPanel playerPanel = new JPanel(new BorderLayout());
+		playerPanel.setBorder(new TitledBorder("Players"));
+		model = new DefaultListModel();
+		PlayerBar newPlayer = new PlayerBar() {
+			public void act() {
+				addPlayer();
+			}
+		};
+		newPlayer.add(new JLabel(new ImageIcon("plus.png")));
+		newPlayer.add(new JLabel("Click to add player"));
+		model.addElement(newPlayer);
+
+		// create a custom cell renderer to properly display the playerbars
+		final class LCR implements ListCellRenderer {
+
+			public Component getListCellRendererComponent(JList list,
+					Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+
+				return (PlayerBar) value;
+			}
 		}
-	}
+		final JList playerList = new JList(model);
+		playerList.setCellRenderer(new LCR());
+		playerPanel.add(playerList, BorderLayout.CENTER);
+		addPlayer();
 
-	private static void AskPlay(String question) {
-		String[] options = { "Yes", "No/Quit" };
-		int answer = JOptionPane.showOptionDialog(null, question, "Choose...",
-				JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-				options, "dummy");
-		if (answer != 0) {
-			System.exit(0);
-		}
+		// add playerpanel to startview
+		startView.add(playerPanel, BorderLayout.CENTER);
+
+		// set main to display startview
+		view.main.add(startView, "Start");
+		cl = (CardLayout) view.main.getLayout();
+		cl.show(view.main, "Start");
+		view.pack();
+		// view.setSize(logoPic.getIconWidth(), 300);
+
+		// add listeners to playerbars
+		playerList.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				PlayerBar pb = (PlayerBar) playerList.getSelectedValue();
+				pb.act();
+			}
+		});
+
+		// create buttons
+		JPanel buttons = new JPanel(new BorderLayout());
+		JButton playButton = new JButton("Play");
+		JButton aboutButton = new JButton("About");
+		JButton quitButton = new JButton("Quit");
+		playButton.setPreferredSize(new Dimension(80, 40));
+		buttons.add(playButton, BorderLayout.NORTH);
+		buttons.add(Box.createRigidArea(new Dimension(0, 10)));
+		JPanel buttonsSouth = new JPanel(new GridLayout(0, 1));
+		buttonsSouth.add(aboutButton);
+		buttonsSouth.add(quitButton);
+		buttons.add(buttonsSouth, BorderLayout.SOUTH);
+
+		// place buttons inside a flow for addded space
+		JPanel flow = new JPanel();
+		flow.add(buttons);
+		startView.add(flow, BorderLayout.EAST);
+
+		// add listeners to buttons
+		quitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		playButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				nrOfPlayers = model.getSize() - 1;
+				// funkar ej!
+				// newGame()
+			}
+		});
+
+		// eftersom spelaknappen inte funkar
+		// uncomment raderna nedan for att spela
+//		nrOfPlayers = 3;
+//		newGame();
 	}
 
 	/**
-	 * A JOptionPane asking to select the number of players.
+	 * Adds a new player to the list.
+	 * 
+	 * @param pl
+	 *            player list to be appended.
 	 */
-	private static int AskNumPlayers() {
-		String[] options = { "1 player", "2 players", "3 players", "4 players" };
-		int answer = JOptionPane.showOptionDialog(null, "How many players?",
-				"Choose...", JOptionPane.YES_NO_OPTION,
-				JOptionPane.PLAIN_MESSAGE, null, options, "dummy");
-		return answer + 1;
+	private static void addPlayer() {
+		JToolBar newPlayer = new PlayerBar() {
+			// what to do when bar is clicked
+			public void act() {
+				// default action is remove player
+				model.removeElement(this);
+			}
+		};
+		newPlayer.add(new JLabel("New player"));
+		int idx = model.getSize() - 1;
+		model.add(idx, newPlayer);
+	}
+
+	private static class PlayerBar extends JToolBar {
+		int id;
+
+		PlayerBar() {
+		};
+
+		public void act() {
+		};
 	}
 
 	/**
@@ -84,10 +174,14 @@ public class StartGame {
 	 * 
 	 * @throws InterruptedException
 	 */
-	private static void newGame() throws InterruptedException {
-		// Reset everything.
+	private final static void newGame() throws InterruptedException {
+		// funkar endast om nedan blir false - ngt fel!
+		System.out.println(javax.swing.SwingUtilities.isEventDispatchThread());
+		// add the fieldView and create field
+		field = new NField(height, width);
 		reset();
-
+		cl.show(view.main, "Field");
+		view.pack();
 		// Create all the players.
 		players = createPlayers(field, nrOfPlayers);
 		// Add a bomb in the middle of the field.

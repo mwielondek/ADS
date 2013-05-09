@@ -1,6 +1,7 @@
 package kth.csc.inda.ads;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -11,6 +12,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class View extends JFrame implements KeyListener {
@@ -18,7 +20,8 @@ public class View extends JFrame implements KeyListener {
 	
 	private static final long serialVersionUID = 5692460536621794238L;
 	private static final Color EMPTY_COLOR = Color.WHITE;
-	private FieldView fieldView;
+	private static FieldView fieldView;
+	public JPanel main;
 	private ArrayList<NSnake> players;
 
 	/**
@@ -27,12 +30,12 @@ public class View extends JFrame implements KeyListener {
 	 * @param width	 The width in number of squares.
 	 */
 	public View(int height, int width) {
-		setTitle("multi snake");
-
+		setTitle("Achtung die Schlange");
 		fieldView = new FieldView(height, width);
 
-		Container contents = getContentPane();
-		contents.add(fieldView, BorderLayout.CENTER);
+		main = new JPanel(new CardLayout());
+		main.add(fieldView, "Field");
+		getContentPane().add(main, BorderLayout.CENTER);
 
 		addKeyListener(this);
 
@@ -40,6 +43,8 @@ public class View extends JFrame implements KeyListener {
 		pack();
 		// Center it.
 		setLocationRelativeTo(null);
+		// makes sure application exits when window is closed
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		// Make it visible.
 		setVisible(true);
 	}
@@ -79,7 +84,7 @@ public class View extends JFrame implements KeyListener {
 	 * user interface. This component displays the field. This is rather
 	 * advanced GUI stuff - you can ignore this for your project if you like.
 	 */
-	private class FieldView extends JPanel {
+	public static class FieldView extends JPanel {
 
 		/**
 		 * 
