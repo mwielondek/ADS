@@ -31,6 +31,7 @@ public class View extends JFrame implements KeyListener {
 	 */
 	public View(int height, int width) {
 		setTitle("Achtung die Schlange");
+		setBackground(Color.WHITE);
 		fieldView = new FieldView(height, width);
 
 		main = new JPanel(new CardLayout());

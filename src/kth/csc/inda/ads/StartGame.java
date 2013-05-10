@@ -19,14 +19,17 @@ public class StartGame {
 	private static JLabel info;
 	private static DefaultListModel model;
 	private static CardLayout cl;
-	private static final int height = 50;
-	private static final int width = 50;
+	private static JButton playButton;
+	private static final int height = 90;
+	private static final int width = 90;
 	private static final int snakeStartLength = 5;
 	private static int nrOfPlayers;
 	private static int numPowerUps; // set number of powerups
+	private static final int MAX_PLAYERS = 4;
+	private static final Color[] PLAYER_COLORS = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA};
 
 	public static void main(String[] args) throws InterruptedException {
-
+		
 		view = new View(height, width);
 		Container container = view.getContentPane();
 		JPanel p1 = new JPanel(new FlowLayout());
@@ -35,9 +38,12 @@ public class StartGame {
 		p2.setBackground(Color.BLACK);
 		container.add(p1, BorderLayout.NORTH);
 		container.add(p2, BorderLayout.SOUTH);
-		info = new JLabel("JJM present...");
+		info = new JLabel("");
 		info.setForeground(Color.WHITE);
 		p1.add(info);
+		JLabel footer = new JLabel("© 2013 by JJM");
+		footer.setForeground(Color.WHITE);
+		p2.add(footer);
 
 		// create main menu
 		JPanel startView = new JPanel(new BorderLayout());
@@ -54,10 +60,13 @@ public class StartGame {
 		PlayerBar newPlayer = new PlayerBar() {
 			public void act() {
 				addPlayer();
+				togglePlayButton();
 			}
 		};
 		newPlayer.add(new JLabel(new ImageIcon("plus.png")));
-		newPlayer.add(new JLabel("Click to add player"));
+		JLabel l = new JLabel("Click to add player");
+		l.setBorder( new EmptyBorder(10, 0, 10, 16));
+		newPlayer.add(l);
 		model.addElement(newPlayer);
 
 		// create a custom cell renderer to properly display the playerbars
@@ -72,6 +81,7 @@ public class StartGame {
 		}
 		final JList playerList = new JList(model);
 		playerList.setCellRenderer(new LCR());
+		playerList.setBackground(playerPanel.getBackground());
 		playerPanel.add(playerList, BorderLayout.CENTER);
 		addPlayer();
 
@@ -95,7 +105,7 @@ public class StartGame {
 
 		// create buttons
 		JPanel buttons = new JPanel(new BorderLayout());
-		JButton playButton = new JButton("Play");
+		playButton = new JButton("Play");
 		JButton aboutButton = new JButton("About");
 		JButton quitButton = new JButton("Quit");
 		playButton.setPreferredSize(new Dimension(80, 40));
@@ -131,6 +141,14 @@ public class StartGame {
 //		newGame();
 	}
 
+	private static void togglePlayButton() {
+		if (model.getSize()<2) {
+			playButton.setEnabled(false);
+		} else {
+			playButton.setEnabled(true);
+		}
+	}
+	
 	/**
 	 * Adds a new player to the list.
 	 * 
@@ -138,14 +156,27 @@ public class StartGame {
 	 *            player list to be appended.
 	 */
 	private static void addPlayer() {
+		int playerID = model.getSize();
+		if (playerID > MAX_PLAYERS)
+			return;
 		JToolBar newPlayer = new PlayerBar() {
 			// what to do when bar is clicked
 			public void act() {
-				// default action is remove player
-				model.removeElement(this);
+				// default action is remove last player
+				model.removeElementAt(model.getSize()-2);
+				togglePlayButton();	
 			}
 		};
-		newPlayer.add(new JLabel("New player"));
+		newPlayer.setLayout(new BorderLayout());
+		JLabel l = new JLabel("Player "+Integer.toString(playerID));
+		l.setForeground(PLAYER_COLORS[playerID-1]);
+		newPlayer.add(l, BorderLayout.WEST);
+		l = new JLabel("(Click to remove)");
+		l.setBorder( new EmptyBorder(16, 16, 16, 16));
+		l.setForeground(Color.GRAY);
+		newPlayer.add(l, BorderLayout.CENTER);
+		l = new JLabel("Left: S, Right: D");
+		newPlayer.add(l, BorderLayout.EAST);
 		int idx = model.getSize() - 1;
 		model.add(idx, newPlayer);
 	}
