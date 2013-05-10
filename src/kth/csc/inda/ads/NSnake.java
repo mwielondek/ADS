@@ -160,14 +160,36 @@ public class NSnake {
 	}
 
 	/**
-	 * Move the snake and return true if a power up was picked.
-	 * 
-	 * @return true if power up is picked otherwise false.
+	 * Move the snake to the location provided.
 	 */
-	public boolean move() {
-		boolean powUpCollected = false;
+	public void move(Location newLoc) {
+		int col = newLoc.getCol();
+		int row = newLoc.getRow();
+
+		// Checks for if the next move is within the field.
+		if (col < 0 || col >= field.getDepth() || row < 0
+				|| row >= field.getWidth()) {
+			kill("crashed into a wall");
+			return;
+		}
+
+		// Add the new location to snakes body.
+		addFirst(newLoc);
+
+		while (body.size() > maxLength) {
+			// Remove the corresponding segment and field if the snake is to
+			// long.
+			removeLast();
+		}
+	}
+
+	/**
+	 * Returns the location that the snake's head will move to.
+	 * 
+	 * @return the location the snake's head will move to
+	 */
+	public Location getNextMove() {
 		Location loc = body.getFirst().getLoc();
-		Location newLoc;
 		int row = loc.getRow();
 		int col = loc.getCol();
 		switch (direction) {
@@ -186,37 +208,8 @@ public class NSnake {
 		}
 		// Reset the turning
 		turning = false;
-
-		// Checks for if the next move is within the field.
-		if (col < 0 || col >= field.getDepth() || row < 0
-				|| row >= field.getWidth()) {
-			kill("crashed into a wall");
-			return powUpCollected; // false since no powerup is collected
-		}
-
-		newLoc = new Location(row, col);
-
-		// Can we add it to the spot we want to?
-		ActAndDraw actor;
-		if ((actor = field.getObjectAt(newLoc)) != null) {
-			// check if something is placed at the next lcation.
-			if (!actor.act(this)) {
-				// Return if the actor method does not want the snake to move
-				// any further.
-				return powUpCollected; // false since the actor is dead
-			} else {
-				powUpCollected = true; // power up was collected
-			}
-		}
-
-		// Add the new location to snakes body.
-		addFirst(newLoc);
-
-		while (body.size() > maxLength) {
-			// Remove the corresponding segment and field if the snake is to long.
-			removeLast();
-		}
-		return powUpCollected;
+		
+		return new Location(row, col);
 	}
 
 	private void addFirst(Location loc) {

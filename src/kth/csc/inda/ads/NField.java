@@ -58,7 +58,11 @@ public class NField {
      * @return The object at the given location, or null if there is none.
      */
     public ActAndDraw getObjectAt(int row, int col) {
-        return field[row][col];
+        try{
+        	return field[row][col];
+        } catch (ArrayIndexOutOfBoundsException e) {
+        	return null;
+        }
     }
 
     /**

@@ -238,23 +238,33 @@ public class StartGame {
 	private static boolean gameLoop() throws InterruptedException {
 		for (int i = 0; i < players.size(); i++) {
 			NSnake p = players.get(i);
-			if (p.move()) {// Check if player was moved onto a power up
-				// Try to place a new power up on the field. If one can't be
-				// placed in 5 tries give up.
-				Random rand = new Random();
-				int n = 0;
-				boolean placed = false;
-				while (!placed && n < 5) {
-					Location temp = new Location(rand.nextInt(width),
-							rand.nextInt(height));
-					if (field.getObjectAt(temp) != null) {
-						n++;
-					} else {
-						field.place(new PowUpFood(), temp);
+			Location newLoc = p.getNextMove();
+			ActAndDraw actor = field.getObjectAt(newLoc);
+			if (actor != null) {// Check if the snake will be moved to a
+								// occupied location
+				if (actor instanceof Powerup) {
+					// Try to place a new power up on the field. If one can't be
+					// placed in 5 tries give up.
+					Random rand = new Random();
+					int n = 0;
+					boolean placed = false;
+					while (!placed && n < 5) {
+						Location temp = new Location(rand.nextInt(width),
+								rand.nextInt(height));
+						if (field.getObjectAt(temp) != null) {
+							n++;
+						} else {
+							field.place(new PowUpFood(), temp);
+							placed = true;
+						}
 					}
 				}
+				if (actor.act(p)) {
+					p.move(newLoc);
+				}
+			} else {
+				p.move(newLoc);
 			}
-
 			System.out.println(p);
 			labels.get(i).setText(p.toString());
 			if (!p.isAlive()) {
