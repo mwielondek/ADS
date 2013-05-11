@@ -7,6 +7,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ import javax.swing.JPanel;
 
 public class View extends JFrame implements KeyListener {
 
-	
 	private static final long serialVersionUID = 5692460536621794238L;
 	private static final Color EMPTY_COLOR = Color.WHITE;
 	private static FieldView fieldView;
@@ -26,8 +26,11 @@ public class View extends JFrame implements KeyListener {
 
 	/**
 	 * Creates the view.
-	 * @param height The height in number of squares.
-	 * @param width	 The width in number of squares.
+	 * 
+	 * @param height
+	 *            The height in number of squares.
+	 * @param width
+	 *            The width in number of squares.
 	 */
 	public View(int height, int width) {
 		setTitle("Achtung die Schlange");
@@ -49,10 +52,12 @@ public class View extends JFrame implements KeyListener {
 		// Make it visible.
 		setVisible(true);
 	}
-	
+
 	/**
 	 * Set the players used in the class.
-	 * @param players The players to be used in the game.
+	 * 
+	 * @param players
+	 *            The players to be used in the game.
 	 */
 	public void SetPlayers(ArrayList<NSnake> players) {
 		this.players = players;
@@ -65,6 +70,9 @@ public class View extends JFrame implements KeyListener {
 	 *            The field whose status is to be displayed.
 	 */
 	public void showStatus(NField field) {
+		if (!isVisible()) {
+			setVisible(true);
+		}
 		fieldView.preparePaint();
 		for (int row = 0; row < field.getDepth(); row++) {
 			for (int col = 0; col < field.getWidth(); col++) {
@@ -164,10 +172,8 @@ public class View extends JFrame implements KeyListener {
 		}
 	}
 
-	
 	/**
-	 * The logic for key presses. 
-	 * Selfexplanatory....
+	 * The logic for key presses. Selfexplanatory....
 	 */
 	@Override
 	public void keyPressed(KeyEvent e) {

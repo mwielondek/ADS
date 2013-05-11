@@ -2,6 +2,7 @@ package kth.csc.inda.ads;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Toolkit;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -130,8 +131,13 @@ public class StartGame {
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				nrOfPlayers = model.getSize() - 1;
-				// funkar ej!
-				// newGame()
+				Runnable startGame = new Runnable() {
+					public void run() {
+						StartGame.newGame();
+					}
+				};
+				Thread t = new Thread(startGame);
+				t.start();
 			}
 		});
 
@@ -205,7 +211,7 @@ public class StartGame {
 	 * 
 	 * @throws InterruptedException
 	 */
-	private final static void newGame() throws InterruptedException {
+	private final static void newGame() {
 		// funkar endast om nedan blir false - ngt fel!
 		System.out.println(javax.swing.SwingUtilities.isEventDispatchThread());
 		// add the fieldView and create field
@@ -250,7 +256,9 @@ public class StartGame {
 		for (int j = 5; j > 0; j--) {
 			info.setText("New game starts in: " + j);
 			gameLoop(); // Slowly draw the snake up.
-			Thread.sleep(1000);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {}
 		}
 		info.setText("Go!");
 
@@ -266,7 +274,7 @@ public class StartGame {
 	 * 
 	 * @throws InterruptedException
 	 */
-	private static boolean gameLoop() throws InterruptedException {
+	private static boolean gameLoop() {
 		for (int i = 0; i < players.size(); i++) {
 			NSnake p = players.get(i);
 			Location newLoc = p.getNextMove();
@@ -306,7 +314,9 @@ public class StartGame {
 		// Draw everything.
 		view.showStatus(field);
 
-		Thread.sleep(100);
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {}
 		if (players.isEmpty()) {
 			// Single player, lost.
 			JOptionPane.showMessageDialog(null, "You lost!", ":(",
