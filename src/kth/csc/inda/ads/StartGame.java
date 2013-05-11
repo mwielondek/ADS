@@ -133,7 +133,7 @@ public class StartGame {
 				nrOfPlayers = model.getSize() - 1;
 				Runnable startGame = new Runnable() {
 					public void run() {
-						StartGame.newGame();
+						newGame();
 					}
 				};
 				Thread t = new Thread(startGame);

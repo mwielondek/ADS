@@ -51,6 +51,8 @@ public class View extends JFrame implements KeyListener {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		// Make it visible.
 		setVisible(true);
+		// focus for keyevent listening
+		setFocusable(true);
 	}
 
 	/**
