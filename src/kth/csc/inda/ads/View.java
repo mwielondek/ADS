@@ -179,23 +179,18 @@ public class View extends JFrame implements KeyListener {
 	}
 
 	/**
-	 * The logic for key presses. Selfexplanatory....
+	 * The logic for key presses. 
 	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 		System.out.println(e.getKeyChar());
 		for (NSnake p : players) {
-			Controls c = p.getControls();
-
-			if (key == c.down()) {
-				p.turn(Direction.DOWN);
-			} else if (key == c.up()) {
-				p.turn(Direction.UP);
+			TwoControls c = p.getControls();
+			if (key == c.left()) {
+				p.turnLeft();
 			} else if (key == c.right()) {
-				p.turn(Direction.RIGHT);
-			} else if (key == c.left()) {
-				p.turn(Direction.LEFT);
+				p.turnRight();
 			}
 		}
 	}

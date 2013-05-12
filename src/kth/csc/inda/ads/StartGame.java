@@ -50,7 +50,6 @@ public class StartGame {
 	private static final int MAX_PLAYERS = 4;
 	private static final Color[] PLAYER_COLORS = { Color.MAGENTA, Color.RED,
 			Color.CYAN, Color.YELLOW };
-
 	public static void main(String[] args) throws InterruptedException {
 
 		view = new View(height, width);
@@ -464,24 +463,21 @@ public class StartGame {
 		switch (nrOfPlayers) {
 		case 4:
 			players.add(new NSnake("YELLOW", Color.YELLOW, field, new Location(
-					height - 10, 10), Direction.RIGHT, new Controls(
-					KeyEvent.VK_V, KeyEvent.VK_SPACE, KeyEvent.VK_C,
-					KeyEvent.VK_B), snakeStartLength));
+					height - 10, 10), Direction.RIGHT, new TwoControls(
+					KeyEvent.VK_V, KeyEvent.VK_B), snakeStartLength));
 		case 3:
 			players.add(new NSnake("CYAN", Color.CYAN, field, new Location(10,
-					width - 10), Direction.LEFT, new Controls(KeyEvent.VK_I,
-					KeyEvent.VK_K, KeyEvent.VK_J, KeyEvent.VK_L),
+					width - 10), Direction.LEFT, new TwoControls(KeyEvent.VK_I,
+					KeyEvent.VK_O),
 					snakeStartLength));
 		case 2:
 			players.add(new NSnake("RED", Color.RED, field, new Location(
 					height - 10, width - 10), Direction.LEFT,
-					new Controls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A,
-							KeyEvent.VK_D), snakeStartLength));
+					new TwoControls(KeyEvent.VK_A, KeyEvent.VK_S), snakeStartLength));
 		case 1:
 			players.add(new NSnake("MAGENTA", Color.MAGENTA, field,
-					new Location(10, 10), Direction.RIGHT, new Controls(
-							KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT,
-							KeyEvent.VK_RIGHT), snakeStartLength));
+					new Location(10, 10), Direction.RIGHT, new TwoControls(
+							KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT), snakeStartLength));
 			break;
 		default:
 			throw new IllegalArgumentException(nrOfPlayers

@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import kth.csc.inda.ads.Controls;
 import kth.csc.inda.ads.Location;
 import kth.csc.inda.ads.NField;
+import kth.csc.inda.ads.TwoControls;
 
 public class NSnake {
 	// Name of the snake.
@@ -27,10 +28,10 @@ public class NSnake {
 	// The cause of death if there is any.
 	private String causeOfDeath;
 	// Controls to steer the snake with.
-	private Controls controls;
+	private TwoControls controls;
 
 	public NSnake(String name, Color color, NField field, Location startLoc,
-			Direction direction, Controls controls, int maxLength) {
+			Direction direction, TwoControls controls, int maxLength) {
 		this.name = name;
 		this.color = color;
 		this.field = field;
@@ -59,7 +60,7 @@ public class NSnake {
 		this.color = color;
 	}
 
-	public Controls getControls() {
+	public TwoControls getControls() {
 		return controls;
 	}
 
@@ -86,82 +87,59 @@ public class NSnake {
 	public void setMaxLength(int maxLength) {
 		this.maxLength = maxLength;
 	}
-
-	private void changeDirection(Direction direction) {
-		this.direction = direction;
-		turning = true;
+	
+	/**
+	 * Change direction to the left.
+	 */
+	public boolean turnRight() {
+		if (!turning) {
+			switch (direction) {
+			case UP:
+				direction = Direction.RIGHT;
+				break;
+			case LEFT:
+				direction = Direction.UP;
+				break;
+			case DOWN:
+				direction = Direction.LEFT;
+				break;
+			case RIGHT:
+				direction = Direction.DOWN;
+				break;
+			}
+			turning = true;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
-	 * Sets a new direction if a new direction has not already been set.
-	 * 
-	 * @param newDirection
-	 * @return True if possible to change direction, otherwise false.
+	 * Change direction to the right.
 	 */
-	public boolean turn(Direction newDirection) {
-		// If the direction has not been changed.
+	public boolean turnLeft() {
 		if (!turning) {
-			// Each case has 2 subcases that are possible to
-			// proceed changing direction to.
-			System.out.println(newDirection);
 			switch (direction) {
-			case DOWN:
-				switch (newDirection) {
-				case DOWN:
-					return false;
-				case LEFT:
-					changeDirection(newDirection);
-					return true;
-				case RIGHT:
-					changeDirection(newDirection);
-					return true;
-				case UP:
-					return false;
-				}
-			case LEFT:
-				switch (newDirection) {
-				case DOWN:
-					changeDirection(newDirection);
-					return true;
-				case LEFT:
-					return false;
-				case RIGHT:
-					return false;
-				case UP:
-					changeDirection(newDirection);
-					return true;
-				}
-			case RIGHT:
-				switch (newDirection) {
-				case DOWN:
-					changeDirection(newDirection);
-					return true;
-				case LEFT:
-					return false;
-				case RIGHT:
-					return false;
-				case UP:
-					changeDirection(newDirection);
-					return true;
-				}
 			case UP:
-				switch (newDirection) {
-				case DOWN:
-					return false;
-				case LEFT:
-					changeDirection(newDirection);
-					return true;
-				case RIGHT:
-					changeDirection(newDirection);
-					return true;
-				case UP:
-					return false;
-				}
+				direction = Direction.LEFT;
+				break;
+			case LEFT:
+				direction = Direction.DOWN;
+				break;
+			case DOWN:
+				direction = Direction.RIGHT;
+				break;
+			case RIGHT:
+				direction = Direction.UP;
+				break;
 			}
+			turning = true;
+			return true;
+		} else {
+			return false;
 		}
-		// When the direction has already been changed.
-		return false;
 	}
+	
 
 	/**
 	 * Move the snake to the location provided.
