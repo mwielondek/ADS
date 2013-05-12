@@ -38,6 +38,7 @@ public class StartGame {
 	private static ArrayList<JLabel> labels;
 	private static NField field;
 	private static JLabel info;
+	private static JLabel footer;
 	private static DefaultListModel model;
 	private static CardLayout cl;
 	private static JButton playButton;
@@ -49,7 +50,8 @@ public class StartGame {
 	private static int numPowerUps; // set number of powerups
 	private static final int MAX_PLAYERS = 4;
 	private static final Color[] PLAYER_COLORS = { Color.MAGENTA, Color.RED,
-			Color.CYAN, Color.YELLOW };
+			Color.CYAN, Color.ORANGE };
+	private static final String[][] PLAYER_CTRLS = { {"←","→"}, {"A","S"}, {"I","O"}, {"V","B"}};
 
 	public static void main(String[] args) throws InterruptedException {
 
@@ -61,10 +63,10 @@ public class StartGame {
 		p2.setBackground(Color.BLACK);
 		container.add(p1, BorderLayout.NORTH);
 		container.add(p2, BorderLayout.SOUTH);
-		info = new JLabel("");
+		info = new JLabel(" ");
 		info.setForeground(Color.WHITE);
 		p1.add(info);
-		JLabel footer = new JLabel("Â© 2013 by JJM");
+		footer = new JLabel("© 2013 by JJM");
 		footer.setForeground(Color.WHITE);
 		p2.add(footer);
 
@@ -174,22 +176,23 @@ public class StartGame {
 				StringBuilder sb = new StringBuilder();
 				sb.append("<HTML><FONT SIZE=12 COLOR=RED> How to play</FONT>");
 				// Player selection.
-				sb.append("<BR><FONT SIZE=4> Player selection</FONT>");
+				sb.append("<BR><FONT SIZE=4>Player selection</FONT>");
 				sb.append("<BR> Add/Remove players by clicking on the bars.");
 				sb.append("<BR> 1-4 players are allowed.");
 				sb.append("<BR>");
 				// Winning conditions.
 				sb.append("<BR><FONT SIZE=4> Winning conditions</FONT>");
-				sb.append("<BR> Make the other snakes die, either by crashing in to<BR> another snake or a wall");
+				sb.append("<BR> Kill the other snakes, either by making them<BR> crash into another snake or a wall");
 				sb.append("<BR>");
 				// Powerups info.
 				sb.append("<BR><FONT SIZE=4> Powerups</FONT>");
-				sb.append("<BR><FONT COLOR=BLACK> Black </FONT> dots are bombs, kills you.");
+				sb.append("<BR><FONT COLOR=BLACK>Black </FONT> dots are bombs, kills you.");
 				sb.append("<BR><FONT COLOR=GREEN> Green </FONT> dots are food, makes you longer.");
 				sb.append("<BR><FONT COLOR=BLUE> Does </FONT> something?");
 				sb.append("</HTML>");
+				ImageIcon icon = new ImageIcon("info.png");
 				JOptionPane.showMessageDialog(view, sb.toString(),
-						"How to play", JOptionPane.INFORMATION_MESSAGE);
+						"How to play", JOptionPane.INFORMATION_MESSAGE, icon);
 			}
 		});
 		return howTo;
@@ -224,13 +227,14 @@ public class StartGame {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("pressed about");
 				StringBuilder sb = new StringBuilder();
-				sb.append("<HTML><FONT SIZE=12 COLOR=RED> Aschtung die Schlange </FONT>");
+				sb.append("<HTML><FONT SIZE=12 COLOR=RED> Achtung die Schlange </FONT>");
 				sb.append("<BR><FONT SIZE=6>A game by: </FONT>");
 				sb.append("<BR>Janne Selkälä");
 				sb.append("<BR> Jesper Simonsson");
-				sb.append("<BR>Milosz Wielondek");
+				sb.append("<BR>Milosz Wielondek</HTML>");
+				ImageIcon icon = new ImageIcon("snake.png");
 				JOptionPane.showMessageDialog(view, sb.toString(), "About",
-						JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.INFORMATION_MESSAGE, icon);
 			}
 		});
 		return about;
@@ -286,14 +290,14 @@ public class StartGame {
 		l.setBorder(new EmptyBorder(16, 16, 16, 16));
 		l.setForeground(Color.GRAY);
 		newPlayer.add(l, BorderLayout.CENTER);
-		l = new JLabel("Left: S, Right: D");
+		String[] ctrls = PLAYER_CTRLS[playerID - 1];
+		l = new JLabel("Left: " + ctrls[0] + ", Right: " + ctrls[1]);
 		newPlayer.add(l, BorderLayout.EAST);
 		int idx = model.getSize() - 1;
 		model.add(idx, newPlayer);
 	}
 
 	private static class PlayerBar extends JToolBar {
-		int id;
 
 		PlayerBar() {
 		};
@@ -352,20 +356,8 @@ public class StartGame {
 
 		// Create the starting powerups and the like.
 		placeStartObjects();
-
-		// Add enough labels for the specified amount of players.
-		JPanel panel = new JPanel(new FlowLayout());
-		panel.setBackground(Color.BLACK);
-		labels = new ArrayList<JLabel>();
-		for (int i = 0; i < players.size(); i++) {
-			JLabel l = new JLabel("player: " + (i + 1));
-			l.setForeground(players.get(i).getColor());
-			panel.add(l);
-			labels.add(l);
-		}
-		Container container = view.getContentPane();
-		container.add(panel, BorderLayout.SOUTH);
-		view.pack(); // To make it look good.
+		
+		footer.setText(" ");
 
 		// Start a 3 second countdown before the game starts.
 		for (int j = 3; j > 0; j--) {
@@ -384,6 +376,9 @@ public class StartGame {
 			}
 		}
 		cl.show(mainPanel, "Start");
+		info.setText(" ");
+		footer.setText("© 2013 by JJM");
+		footer.setForeground(Color.WHITE);
 		view.pack();
 	}
 
@@ -423,10 +418,10 @@ public class StartGame {
 				p.move(newLoc);
 			}
 			System.out.println(p);
-			labels.get(i).setText(p.toString());
 			if (!p.isAlive()) {
 				players.remove(i);
-				labels.remove(i);
+				footer.setText(p.toString());
+				footer.setForeground(p.getColor());
 			}
 		}
 		// Draw everything.
@@ -438,13 +433,18 @@ public class StartGame {
 		}
 		if (players.isEmpty()) {
 			// Single player, lost.
+			ImageIcon icon = new ImageIcon("finish.png");
 			JOptionPane.showMessageDialog(null, "You lost!", "Game over",
-					JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.INFORMATION_MESSAGE, icon);
 			return true;
 		} else if (players.size() == 1 && nrOfPlayers != 1) {
 			// Do something as someone has won.
-			JOptionPane.showMessageDialog(view, players.get(0).getName()
-					+ " has won!", "Game over", JOptionPane.INFORMATION_MESSAGE);
+			NSnake winner = players.get(0);
+			String rgb = Integer.toHexString(winner.getColor().getRGB());
+			rgb = rgb.substring(2, rgb.length());
+			ImageIcon icon = new ImageIcon("gameover.png");
+			JOptionPane.showMessageDialog(view, "<HTML><FONT COLOR=" + rgb + "> " + winner.getName()
+					+ "</FONT> has won! </HTML>", "Game over", JOptionPane.INFORMATION_MESSAGE, icon);
 			return true;
 		}
 		return false;
@@ -463,22 +463,22 @@ public class StartGame {
 		ArrayList<NSnake> players = new ArrayList<NSnake>();
 		switch (nrOfPlayers) {
 		case 4:
-			players.add(new NSnake("YELLOW", Color.YELLOW, field, new Location(
+			players.add(new NSnake("Player 4", Color.ORANGE, field, new Location(
 					height - 10, 10), Direction.RIGHT, new Controls(
 					KeyEvent.VK_V, KeyEvent.VK_SPACE, KeyEvent.VK_C,
 					KeyEvent.VK_B), snakeStartLength));
 		case 3:
-			players.add(new NSnake("CYAN", Color.CYAN, field, new Location(10,
+			players.add(new NSnake("Player 3", Color.CYAN, field, new Location(10,
 					width - 10), Direction.LEFT, new Controls(KeyEvent.VK_I,
 					KeyEvent.VK_K, KeyEvent.VK_J, KeyEvent.VK_L),
 					snakeStartLength));
 		case 2:
-			players.add(new NSnake("RED", Color.RED, field, new Location(
+			players.add(new NSnake("Player 2", Color.RED, field, new Location(
 					height - 10, width - 10), Direction.LEFT,
 					new Controls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A,
 							KeyEvent.VK_D), snakeStartLength));
 		case 1:
-			players.add(new NSnake("MAGENTA", Color.MAGENTA, field,
+			players.add(new NSnake("Player 1", Color.MAGENTA, field,
 					new Location(10, 10), Direction.RIGHT, new Controls(
 							KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT,
 							KeyEvent.VK_RIGHT), snakeStartLength));

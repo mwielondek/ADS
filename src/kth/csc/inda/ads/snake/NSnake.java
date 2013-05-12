@@ -255,7 +255,7 @@ public class NSnake {
 		if (isAlive()) {
 			return name + ", " + body.getFirst().getLoc() + " is alive.";
 		}
-		return name + ", " + body.getFirst().getLoc() + " " + causeOfDeath;
+		return name + " " + causeOfDeath;
 	}
 
 }
