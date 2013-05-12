@@ -6,6 +6,8 @@ import java.awt.Toolkit;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -43,7 +45,7 @@ public class StartGame {
 		info = new JLabel("");
 		info.setForeground(Color.WHITE);
 		p1.add(info);
-		JLabel footer = new JLabel("© 2013 by JJM");
+		JLabel footer = new JLabel("Â© 2013 by JJM");
 		footer.setForeground(Color.WHITE);
 		p2.add(footer);
 
@@ -106,30 +108,79 @@ public class StartGame {
 		});
 
 		// create buttons
-		JPanel buttons = new JPanel(new BorderLayout());
-		playButton = new JButton("Play");
-		JButton aboutButton = new JButton("About");
-		JButton quitButton = new JButton("Quit");
-		playButton.setPreferredSize(new Dimension(80, 40));
-		buttons.add(playButton, BorderLayout.NORTH);
-		buttons.add(Box.createRigidArea(new Dimension(0, 10)));
-		JPanel buttonsSouth = new JPanel(new GridLayout(0, 1));
-		buttonsSouth.add(aboutButton);
-		buttonsSouth.add(quitButton);
-		buttons.add(buttonsSouth, BorderLayout.SOUTH);
+		JPanel buttons = createButtons();
 
-		// place buttons inside a flow for addded space
+		// place buttons inside a flow for added space
 		JPanel flow = new JPanel();
 		flow.add(buttons);
 		startView.add(flow, BorderLayout.EAST);
+	}
 
-		// add listeners to buttons
-		quitButton.addActionListener(new ActionListener() {
+	/**
+	 * @return The panel with the created buttons.
+	 */
+	private static JPanel createButtons() {
+		// Panel to add the buttons to.
+		JPanel buttons = new JPanel(new BorderLayout());
+
+		// Create buttons.
+		playButton = playButton();
+		JButton aboutButton = aboutButton();
+		JButton quitButton = quitButton();
+		JButton howToButton = howToButton();
+
+		// Add the bigger play button.
+		playButton.setPreferredSize(new Dimension(80, 40));
+		buttons.add(playButton, BorderLayout.NORTH);
+		buttons.add(Box.createRigidArea(new Dimension(0, 10)));
+
+		// Add the rest of the buttons.
+		JPanel buttonsSouth = new JPanel(new GridLayout(0, 1));
+		buttonsSouth.add(aboutButton);
+		buttonsSouth.add(howToButton);
+		buttonsSouth.add(quitButton);
+		buttons.add(buttonsSouth, BorderLayout.SOUTH);
+
+		return buttons;
+	}
+
+	/**
+	 * @return The howTo button.
+	 */
+	private static JButton howToButton() {
+		JButton howTo = new JButton("How to play");
+		howTo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				StringBuilder sb = new StringBuilder();
+				sb.append("<HTML><FONT SIZE=12 COLOR=RED> How to play</FONT>");
+				// Player selection.
+				sb.append("<BR><FONT SIZE=4> Player selection</FONT>");
+				sb.append("<BR> Add/Remove players by clicking on the bars.");
+				sb.append("<BR> 1-4 players are allowed.");
+				sb.append("<BR>");
+				// Winning conditions.
+				sb.append("<BR><FONT SIZE=4> Winning conditions</FONT>");
+				sb.append("<BR> Make the other snakes die, either by crashing in to<BR> another snake or a wall");
+				sb.append("<BR>");
+				// Powerups info.
+				sb.append("<BR><FONT SIZE=4> Powerups</FONT>");
+				sb.append("<BR><FONT COLOR=BLACK> Black </FONT> dots are bombs, kills you.");
+				sb.append("<BR><FONT COLOR=GREEN> Green </FONT> dots are food, makes you longer.");
+				sb.append("<BR><FONT COLOR=BLUE> Does </FONT> something?");
+				sb.append("</HTML>");
+				JOptionPane.showMessageDialog(view, sb.toString(), "How to play",
+						JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-		playButton.addActionListener(new ActionListener() {
+		return howTo;
+	}
+
+	/**
+	 * @return The play button.
+	 */
+	private static JButton playButton() {
+		JButton play = new JButton("Play");
+		play.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				nrOfPlayers = model.getSize() - 1;
 				Runnable startGame = new Runnable() {
@@ -141,13 +192,45 @@ public class StartGame {
 				t.start();
 			}
 		});
-
-		// eftersom spelaknappen inte funkar
-		// uncomment raderna nedan for att spela
-		// nrOfPlayers = 3;
-		// newGame();
+		return play;
 	}
 
+	/**
+	 * @return The about button.
+	 */
+	private static JButton aboutButton() {
+		JButton about = new JButton("About");
+		about.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("pressed about");
+				StringBuilder sb = new StringBuilder();
+				sb.append("<HTML><FONT SIZE=12 COLOR=RED> Aschtung die Schlange </FONT>");
+				sb.append("<BR><FONT SIZE=6>A game by: </FONT>");
+				sb.append("<BR>Janne Selkälä");
+				sb.append("<BR> Jesper Simonsson");
+				sb.append("<BR>Milosz Wielondek");
+				JOptionPane.showMessageDialog(view, sb.toString(), "About", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		return about;
+	}
+
+	/**
+	 * @return The quit button.
+	 */
+	private static JButton quitButton() {
+		JButton quit = new JButton("Quit");
+		quit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		return quit;
+	}
+
+	/**
+	 * Toogles the play button.
+	 */
 	private static void togglePlayButton() {
 		if (model.getSize() < 2) {
 			playButton.setEnabled(false);
@@ -240,12 +323,12 @@ public class StartGame {
 		reset();
 		cl.show(view.main, "Field");
 		view.pack();
-		
+
 		// Create all the players.
 		players = createPlayers(field, nrOfPlayers);
 		// Add the players to the view.
 		view.SetPlayers(players);
-		
+
 		// Create the starting powerups and the like.
 		placeStartObjects();
 
