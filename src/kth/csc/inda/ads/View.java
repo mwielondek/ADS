@@ -21,7 +21,7 @@ public class View extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 5692460536621794238L;
 	private static final Color EMPTY_COLOR = Color.WHITE;
 	private static FieldView fieldView;
-	public JPanel main;
+	private JPanel main;
 	private ArrayList<NSnake> players;
 
 	/**
@@ -53,6 +53,10 @@ public class View extends JFrame implements KeyListener {
 		setVisible(true);
 		// focus for keyevent listening
 		setFocusable(true);
+	}
+	
+	public JPanel getMainPanel() {
+		return main;
 	}
 
 	/**

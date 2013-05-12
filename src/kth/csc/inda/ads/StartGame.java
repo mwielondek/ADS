@@ -41,6 +41,7 @@ public class StartGame {
 	private static DefaultListModel model;
 	private static CardLayout cl;
 	private static JButton playButton;
+	private static JPanel mainPanel;
 	private static final int height = 90;
 	private static final int width = 90;
 	private static final int snakeStartLength = 5;
@@ -111,9 +112,10 @@ public class StartGame {
 		startView.add(playerPanel, BorderLayout.CENTER);
 
 		// set main to display startview
-		view.main.add(startView, "Start");
-		cl = (CardLayout) view.main.getLayout();
-		cl.show(view.main, "Start");
+		mainPanel = view.getMainPanel();
+		mainPanel.add(startView, "Start");
+		cl = (CardLayout) mainPanel.getLayout();
+		cl.show(mainPanel, "Start");
 		// view.setSize(logoPic.getIconWidth(), 300);
 
 		// add listeners to playerbars
@@ -340,7 +342,7 @@ public class StartGame {
 		// add the fieldView and create field
 		field = new NField(height, width);
 		reset();
-		cl.show(view.main, "Field");
+		cl.show(mainPanel, "Field");
 		view.pack();
 
 		// Create all the players.
@@ -381,7 +383,7 @@ public class StartGame {
 				break;
 			}
 		}
-		cl.show(view.main, "Start");
+		cl.show(mainPanel, "Start");
 		view.pack();
 	}
 
