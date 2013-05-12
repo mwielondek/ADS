@@ -367,8 +367,8 @@ public class StartGame {
 		container.add(panel, BorderLayout.SOUTH);
 		view.pack(); // To make it look good.
 
-		// Start a 5 second countdown before the game starts.
-		for (int j = 5; j > 0; j--) {
+		// Start a 3 second countdown before the game starts.
+		for (int j = 3; j > 0; j--) {
 			info.setText("New game starts in: " + j);
 			gameLoop(); // Slowly draw the snake up.
 			try {
@@ -438,13 +438,13 @@ public class StartGame {
 		}
 		if (players.isEmpty()) {
 			// Single player, lost.
-			JOptionPane.showMessageDialog(null, "You lost!", ":(",
+			JOptionPane.showMessageDialog(null, "You lost!", "Game over",
 					JOptionPane.INFORMATION_MESSAGE);
 			return true;
 		} else if (players.size() == 1 && nrOfPlayers != 1) {
 			// Do something as someone has won.
 			JOptionPane.showMessageDialog(view, players.get(0).getName()
-					+ " has won!", ":)", JOptionPane.INFORMATION_MESSAGE);
+					+ " has won!", "Game over", JOptionPane.INFORMATION_MESSAGE);
 			return true;
 		}
 		return false;
