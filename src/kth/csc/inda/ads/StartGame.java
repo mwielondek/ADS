@@ -47,8 +47,8 @@ public class StartGame {
 	private static int nrOfPlayers;
 	private static int numPowerUps; // set number of powerups
 	private static final int MAX_PLAYERS = 4;
-	private static final Color[] PLAYER_COLORS = { Color.RED, Color.BLUE,
-			Color.GREEN, Color.MAGENTA };
+	private static final Color[] PLAYER_COLORS = { Color.MAGENTA, Color.RED,
+			Color.CYAN, Color.YELLOW };
 
 	public static void main(String[] args) throws InterruptedException {
 
@@ -114,7 +114,6 @@ public class StartGame {
 		view.main.add(startView, "Start");
 		cl = (CardLayout) view.main.getLayout();
 		cl.show(view.main, "Start");
-		view.pack();
 		// view.setSize(logoPic.getIconWidth(), 300);
 
 		// add listeners to playerbars
@@ -132,6 +131,7 @@ public class StartGame {
 		JPanel flow = new JPanel();
 		flow.add(buttons);
 		startView.add(flow, BorderLayout.EAST);
+		view.pack();
 	}
 
 	/**
@@ -186,8 +186,8 @@ public class StartGame {
 				sb.append("<BR><FONT COLOR=GREEN> Green </FONT> dots are food, makes you longer.");
 				sb.append("<BR><FONT COLOR=BLUE> Does </FONT> something?");
 				sb.append("</HTML>");
-				JOptionPane.showMessageDialog(view, sb.toString(), "How to play",
-						JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(view, sb.toString(),
+						"How to play", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		return howTo;
@@ -227,7 +227,8 @@ public class StartGame {
 				sb.append("<BR>Janne Selkälä");
 				sb.append("<BR> Jesper Simonsson");
 				sb.append("<BR>Milosz Wielondek");
-				JOptionPane.showMessageDialog(view, sb.toString(), "About", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(view, sb.toString(), "About",
+						JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		return about;
@@ -312,7 +313,7 @@ public class StartGame {
 	private static void placeStartObjects() {
 		// Place a set number of food objects on the field
 		Random rand = new Random();
-		for (int i = 0; i < numPowerUps; i++) {
+		for (int i = 0; i < nrOfPlayers + 2; i++) {
 			Location temp = new Location(rand.nextInt(width),
 					rand.nextInt(height));
 			if (field.getObjectAt(temp) == null) {
@@ -380,6 +381,8 @@ public class StartGame {
 				break;
 			}
 		}
+		cl.show(view.main, "Start");
+		view.pack();
 	}
 
 	/**
@@ -463,7 +466,7 @@ public class StartGame {
 					KeyEvent.VK_V, KeyEvent.VK_SPACE, KeyEvent.VK_C,
 					KeyEvent.VK_B), snakeStartLength));
 		case 3:
-			players.add(new NSnake("BLUE", Color.BLUE, field, new Location(10,
+			players.add(new NSnake("CYAN", Color.CYAN, field, new Location(10,
 					width - 10), Direction.LEFT, new Controls(KeyEvent.VK_I,
 					KeyEvent.VK_K, KeyEvent.VK_J, KeyEvent.VK_L),
 					snakeStartLength));

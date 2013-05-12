@@ -222,6 +222,7 @@ public class NSnake {
 	private void addFirst(Location loc) {
 		// Replace the current first segment with a body instead of head.
 		body.addFirst(new NSnakeSegBody(this, body.removeFirst().getLoc()));
+		field.place(body.getFirst(), body.getFirst().getLoc());
 		// Creates the new segment to add.
 		NSnakeSeg newSeg = new NSnakeSegHead(this, loc);
 		body.addFirst(newSeg);
