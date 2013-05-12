@@ -1,18 +1,36 @@
 package kth.csc.inda.ads;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
-import java.awt.Toolkit;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.Box;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
+import javax.swing.ListCellRenderer;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+
+import kth.csc.inda.ads.snake.Direction;
+import kth.csc.inda.ads.snake.NSnake;
 
 public class StartGame {
 	private static View view;

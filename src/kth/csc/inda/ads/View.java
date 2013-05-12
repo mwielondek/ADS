@@ -3,18 +3,18 @@ package kth.csc.inda.ads;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import kth.csc.inda.ads.snake.Direction;
+import kth.csc.inda.ads.snake.NSnake;
 
 public class View extends JFrame implements KeyListener {
 

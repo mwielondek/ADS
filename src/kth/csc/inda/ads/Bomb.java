@@ -2,6 +2,8 @@ package kth.csc.inda.ads;
 
 import java.awt.Color;
 
+import kth.csc.inda.ads.snake.NSnake;
+
 /**
  * @author Jesper Simonsson
  */

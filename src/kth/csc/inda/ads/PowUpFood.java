@@ -2,6 +2,8 @@ package kth.csc.inda.ads;
 
 import java.awt.Color;
 
+import kth.csc.inda.ads.snake.NSnake;
+
 /**
  * A class describing the food power up which causes the snake to grow longer.
  * @author Janne

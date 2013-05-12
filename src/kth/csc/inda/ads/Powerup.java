@@ -5,6 +5,8 @@ package kth.csc.inda.ads;
 
 import java.awt.Color;
 
+import kth.csc.inda.ads.snake.NSnake;
+
 /**
  * An interface class for the power up objects in the game.
  * @author Janne

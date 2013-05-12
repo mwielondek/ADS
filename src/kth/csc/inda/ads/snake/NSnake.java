@@ -1,7 +1,11 @@
-package kth.csc.inda.ads;
+package kth.csc.inda.ads.snake;
 
 import java.awt.Color;
 import java.util.LinkedList;
+
+import kth.csc.inda.ads.Controls;
+import kth.csc.inda.ads.Location;
+import kth.csc.inda.ads.NField;
 
 public class NSnake {
 	// Name of the snake.
@@ -36,7 +40,7 @@ public class NSnake {
 		this.isAlive = true;
 
 		// Add the starting segment of the snake.
-		body.addFirst(new NSnakeSeg(this, startLoc));
+		body.addFirst(new NSnakeSegHead(this, startLoc));
 	}
 
 	/**
@@ -212,8 +216,14 @@ public class NSnake {
 		return new Location(row, col);
 	}
 
+	/**
+	 * Adds a new segment at the specified locations.
+	 */
 	private void addFirst(Location loc) {
-		NSnakeSeg newSeg = new NSnakeSeg(this, loc);
+		// Replace the current first segment with a body instead of head.
+		body.addFirst(new NSnakeSegBody(this, body.removeFirst().getLoc()));
+		// Creates the new segment to add.
+		NSnakeSeg newSeg = new NSnakeSegHead(this, loc);
 		body.addFirst(newSeg);
 		field.place(newSeg, loc);
 	}
