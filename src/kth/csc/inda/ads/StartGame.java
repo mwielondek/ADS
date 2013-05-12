@@ -27,10 +27,11 @@ public class StartGame {
 	private static int nrOfPlayers;
 	private static int numPowerUps; // set number of powerups
 	private static final int MAX_PLAYERS = 4;
-	private static final Color[] PLAYER_COLORS = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA};
+	private static final Color[] PLAYER_COLORS = { Color.RED, Color.BLUE,
+			Color.GREEN, Color.MAGENTA };
 
 	public static void main(String[] args) throws InterruptedException {
-		
+
 		view = new View(height, width);
 		Container container = view.getContentPane();
 		JPanel p1 = new JPanel(new FlowLayout());
@@ -42,7 +43,7 @@ public class StartGame {
 		info = new JLabel("");
 		info.setForeground(Color.WHITE);
 		p1.add(info);
-		JLabel footer = new JLabel("© 2013 by JJM");
+		JLabel footer = new JLabel("Â© 2013 by JJM");
 		footer.setForeground(Color.WHITE);
 		p2.add(footer);
 
@@ -66,7 +67,7 @@ public class StartGame {
 		};
 		newPlayer.add(new JLabel(new ImageIcon("plus.png")));
 		JLabel l = new JLabel("Click to add player");
-		l.setBorder( new EmptyBorder(10, 0, 10, 16));
+		l.setBorder(new EmptyBorder(10, 0, 10, 16));
 		newPlayer.add(l);
 		model.addElement(newPlayer);
 
@@ -143,18 +144,18 @@ public class StartGame {
 
 		// eftersom spelaknappen inte funkar
 		// uncomment raderna nedan for att spela
-//		nrOfPlayers = 3;
-//		newGame();
+		// nrOfPlayers = 3;
+		// newGame();
 	}
 
 	private static void togglePlayButton() {
-		if (model.getSize()<2) {
+		if (model.getSize() < 2) {
 			playButton.setEnabled(false);
 		} else {
 			playButton.setEnabled(true);
 		}
 	}
-	
+
 	/**
 	 * Adds a new player to the list.
 	 * 
@@ -169,16 +170,16 @@ public class StartGame {
 			// what to do when bar is clicked
 			public void act() {
 				// default action is remove last player
-				model.removeElementAt(model.getSize()-2);
-				togglePlayButton();	
+				model.removeElementAt(model.getSize() - 2);
+				togglePlayButton();
 			}
 		};
 		newPlayer.setLayout(new BorderLayout());
-		JLabel l = new JLabel("Player "+Integer.toString(playerID));
-		l.setForeground(PLAYER_COLORS[playerID-1]);
+		JLabel l = new JLabel("Player " + Integer.toString(playerID));
+		l.setForeground(PLAYER_COLORS[playerID - 1]);
 		newPlayer.add(l, BorderLayout.WEST);
 		l = new JLabel("(Click to remove)");
-		l.setBorder( new EmptyBorder(16, 16, 16, 16));
+		l.setBorder(new EmptyBorder(16, 16, 16, 16));
 		l.setForeground(Color.GRAY);
 		newPlayer.add(l, BorderLayout.CENTER);
 		l = new JLabel("Left: S, Right: D");
@@ -205,6 +206,26 @@ public class StartGame {
 	}
 
 	/**
+	 * Places all the starting objects on the field.
+	 */
+	private static void placeStartObjects() {
+		// Place a set number of food objects on the field
+		Random rand = new Random();
+		for (int i = 0; i < numPowerUps; i++) {
+			Location temp = new Location(rand.nextInt(width),
+					rand.nextInt(height));
+			if (field.getObjectAt(temp) == null) {
+				field.place(new PowUpFood(), temp);
+			} else {
+				i--;
+			}
+		}
+
+		// Add a bomb in the middle of the field.
+		field.place(new Bomb(), new Location(width / 2, height / 2));
+	}
+
+	/**
 	 * Starts a new game with a specified amount of players.
 	 * 
 	 * @param nrOfPlayers
@@ -219,24 +240,14 @@ public class StartGame {
 		reset();
 		cl.show(view.main, "Field");
 		view.pack();
+		
 		// Create all the players.
 		players = createPlayers(field, nrOfPlayers);
-		// Add a bomb in the middle of the field.
-		field.place(new Bomb(), new Location(width / 2, height / 2));
 		// Add the players to the view.
 		view.SetPlayers(players);
-
-		// Place a set number of food objects on the field
-		Random rand = new Random();
-		for (int i = 0; i < numPowerUps; i++) {
-			Location temp = new Location(rand.nextInt(width),
-					rand.nextInt(height));
-			if (field.getObjectAt(temp) == null) {
-				field.place(new PowUpFood(), temp);
-			} else {
-				i--;
-			}
-		}
+		
+		// Create the starting powerups and the like.
+		placeStartObjects();
 
 		// Add enough labels for the specified amount of players.
 		JPanel panel = new JPanel(new FlowLayout());
@@ -258,7 +269,8 @@ public class StartGame {
 			gameLoop(); // Slowly draw the snake up.
 			try {
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException e) {
+			}
 		}
 		info.setText("Go!");
 
@@ -316,7 +328,8 @@ public class StartGame {
 
 		try {
 			Thread.sleep(100);
-		} catch (InterruptedException e) {}
+		} catch (InterruptedException e) {
+		}
 		if (players.isEmpty()) {
 			// Single player, lost.
 			JOptionPane.showMessageDialog(null, "You lost!", ":(",
