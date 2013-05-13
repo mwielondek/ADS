@@ -95,7 +95,7 @@ public class NSnake {
 	public void setMaxLength(int maxLength) {
 		this.maxLength = maxLength;
 	}
-	
+
 	/**
 	 * Change direction to the left.
 	 */
@@ -147,7 +147,6 @@ public class NSnake {
 			return false;
 		}
 	}
-	
 
 	/**
 	 * Move the snake to the location provided.
@@ -198,7 +197,7 @@ public class NSnake {
 		}
 		// Reset the turning
 		turning = false;
-		
+
 		return new Location(row, col);
 	}
 
@@ -206,22 +205,19 @@ public class NSnake {
 	 * Adds a new segment at the specified locations.
 	 */
 	private void addFirst(Location loc, boolean underground) {
-		// Replace the current first segment with a body instead of head.
-		NSnakeSeg oldHead = body.getFirst();
-		if (oldHead instanceof NSnakeSegHead) {
-			body.removeFirst();
-			body.addFirst(new NSnakeSegBody(this, oldHead.getLoc()));
-			field.place(body.getFirst(), body.getFirst().getLoc());
-		}
-		// Creates the new segment to add.
-		NSnakeSeg newSeg;
+		// Replace the current first segment with a bodysegment above or under
+		// ground instead of head, and place it one the field.
+		NSnakeSeg oldHead = body.removeFirst();
 		if (underground) {
-			newSeg = new NSnakeSegEmpty(this, loc);
+			body.addFirst(new NSnakeSegEmpty(this, oldHead.getLoc()));
 		} else {
-			newSeg = new NSnakeSegHead(this, loc);
+			body.addFirst(new NSnakeSegBody(this, oldHead.getLoc()));
 		}
-		body.addFirst(newSeg);
-		field.place(newSeg, loc);
+		field.place(body.getFirst(), body.getFirst().getLoc());
+
+		// Add new head to the snake and place on the field
+		body.addFirst(new NSnakeSegHead(this, loc));
+		field.place(body.getFirst(), loc);
 	}
 
 	private void removeLast() {
