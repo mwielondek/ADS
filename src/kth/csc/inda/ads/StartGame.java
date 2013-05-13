@@ -180,6 +180,10 @@ public class StartGame {
 				sb.append("<BR> Add/Remove players by clicking on the bars.");
 				sb.append("<BR> 1-4 players are allowed.");
 				sb.append("<BR>");
+				// Snake controls. 
+				sb.append("<BR><FONT SIZE=4>Controls</FONT>");
+				sb.append("<BR> Left/right turns it left/right in the direction the snakes are going.");
+				sb.append("<BR>");
 				// Winning conditions.
 				sb.append("<BR><FONT SIZE=4> Winning conditions</FONT>");
 				sb.append("<BR> Kill the other snakes, either by making them<BR> crash into another snake or a wall");
