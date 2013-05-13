@@ -188,7 +188,6 @@ public class StartGame {
 				sb.append("<BR><FONT SIZE=4> Powerups</FONT>");
 				sb.append("<BR><FONT COLOR=BLACK>Black </FONT> dots are bombs, kills you.");
 				sb.append("<BR><FONT COLOR=GREEN> Green </FONT> dots are food, makes you longer.");
-				sb.append("<BR><FONT COLOR=BLUE> Does </FONT> something?");
 				sb.append("</HTML>");
 				ImageIcon icon = new ImageIcon("info.png");
 				JOptionPane.showMessageDialog(view, sb.toString(),
