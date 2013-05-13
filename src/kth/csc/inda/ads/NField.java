@@ -1,5 +1,14 @@
 package kth.csc.inda.ads;
 
+/**
+ * The playing field where all objects and such exist.
+ * All objects needs to implement the act and draw interface.
+ * 
+ * @author Janne Selkälä
+ * @author Jesper Simonsson
+ * @author Milosz Wielondek
+ * @version 2013-05-10
+ */
 public class NField {
     
     // The depth and width of the field.

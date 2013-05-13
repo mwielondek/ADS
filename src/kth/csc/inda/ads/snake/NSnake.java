@@ -15,7 +15,6 @@ import kth.csc.inda.ads.TwoControls;
  * @author Milosz Wielondek
  * @version 2013-05-13
  */
-
 public class NSnake {
 	// Name of the snake.
 	private String name;
@@ -68,6 +67,9 @@ public class NSnake {
 		this.color = color;
 	}
 
+	/**
+	 * @return The controls.
+	 */
 	public TwoControls getControls() {
 		return controls;
 	}

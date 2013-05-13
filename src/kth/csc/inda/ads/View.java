@@ -15,6 +15,15 @@ import javax.swing.JPanel;
 
 import kth.csc.inda.ads.snake.NSnake;
 
+/**
+ * The view for the game plan and some more
+ * to support a startview.
+ * 
+ * @author Janne Selkälä
+ * @author Jesper Simonsson
+ * @author Milosz Wielondek
+ * @version 2013-05-10
+ */
 public class View extends JFrame implements KeyListener {
 
 	private static final long serialVersionUID = 5692460536621794238L;
@@ -54,6 +63,9 @@ public class View extends JFrame implements KeyListener {
 		setFocusable(true);
 	}
 	
+	/**
+	 * @return The main panel.
+	 */
 	public JPanel getMainPanel() {
 		return main;
 	}

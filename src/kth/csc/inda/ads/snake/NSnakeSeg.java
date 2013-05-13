@@ -2,6 +2,9 @@ package kth.csc.inda.ads.snake;
 
 import java.awt.Color;
 
+import kth.csc.inda.ads.ActAndDraw;
+import kth.csc.inda.ads.Location;
+
 /**
  * A basic snakesegment for other classes to extend up on.
  * 
@@ -10,10 +13,6 @@ import java.awt.Color;
  * @author Milosz Wielondek
  * @version 2013-05-12
  */
-
-import kth.csc.inda.ads.ActAndDraw;
-import kth.csc.inda.ads.Location;
-
 public abstract class NSnakeSeg implements ActAndDraw {
 		private NSnake snake;
 		private Location loc;
