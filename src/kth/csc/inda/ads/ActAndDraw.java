@@ -5,8 +5,13 @@ import java.awt.Color;
 import kth.csc.inda.ads.snake.NSnake;
 
 /**
- * @author jsimo
- *
+ * Interface for objects that will exist on the field. 
+ * All of them needs to have a color and a act method.
+ * 
+ * @author Janne Selkälä
+ * @author Jesper Simonsson
+ * @author Milosz Wielondek
+ * @version 2013-05-13
  */
 public interface ActAndDraw {
 	

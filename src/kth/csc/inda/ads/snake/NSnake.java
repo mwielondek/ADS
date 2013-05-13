@@ -7,6 +7,15 @@ import kth.csc.inda.ads.Location;
 import kth.csc.inda.ads.NField;
 import kth.csc.inda.ads.TwoControls;
 
+/**
+ * Class for creating snakes to use on the field.
+ * 
+ * @author Janne Selkälä
+ * @author Jesper Simonsson
+ * @author Milosz Wielondek
+ * @version 2013-05-13
+ */
+
 public class NSnake {
 	// Name of the snake.
 	private String name;

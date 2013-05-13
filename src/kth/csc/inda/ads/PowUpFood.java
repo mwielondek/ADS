@@ -6,13 +6,19 @@ import kth.csc.inda.ads.snake.NSnake;
 
 /**
  * A class describing the food power up which causes the snake to grow longer.
- * @author Janne
- *
+ * 
+ * @author Janne Selkälä
+ * @author Jesper Simonsson
+ * @author Milosz Wielondek
+ * @version 2013-05-12
  */
 
 public class PowUpFood implements Powerup {
 	private Color color = Color.GREEN;
 	
+	/**
+	 * Constructor.
+	 */
 	public PowUpFood(){
 	}
 	

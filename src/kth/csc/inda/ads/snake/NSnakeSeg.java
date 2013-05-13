@@ -2,6 +2,15 @@ package kth.csc.inda.ads.snake;
 
 import java.awt.Color;
 
+/**
+ * A basic snakesegment for other classes to extend up on.
+ * 
+ * @author Janne Selkälä
+ * @author Jesper Simonsson
+ * @author Milosz Wielondek
+ * @version 2013-05-12
+ */
+
 import kth.csc.inda.ads.ActAndDraw;
 import kth.csc.inda.ads.Location;
 

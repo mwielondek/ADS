@@ -32,10 +32,18 @@ import javax.swing.border.TitledBorder;
 import kth.csc.inda.ads.snake.Direction;
 import kth.csc.inda.ads.snake.NSnake;
 
+/**
+ * The class contains the game logic, and the ui for starting the game.
+ * 
+ * @author Janne Selkälä
+ * @author Jesper Simonsson
+ * @author Milosz Wielondek
+ * @version 2013-05-13
+ */
+
 public class StartGame {
 	private static View view;
 	private static ArrayList<NSnake> players;
-	private static ArrayList<JLabel> labels;
 	private static NField field;
 	private static JLabel info;
 	private static JLabel footer;
@@ -47,14 +55,23 @@ public class StartGame {
 	private static final int width = 90;
 	private static final int snakeStartLength = 5;
 	private static int nrOfPlayers;
-	private static int numPowerUps; // set number of powerups
 	private static final int MAX_PLAYERS = 4;
 	private static final Color[] PLAYER_COLORS = { Color.MAGENTA, Color.RED,
 			Color.CYAN, Color.ORANGE };
-	private static final String[][] PLAYER_CTRLS = { {"←","→"}, {"A","S"}, {"I","O"}, {"V","B"}};
+	private static final String[][] PLAYER_CTRLS = { { "←", "→" },
+			{ "A", "S" }, { "I", "O" }, { "V", "B" } };
 
+	/**
+	 * Run the game.
+	 */
 	public static void main(String[] args) throws InterruptedException {
+		start();
+	}
 
+	/**
+	 * Start playing the game by starting up the UI.
+	 */
+	public static void start() {
 		view = new View(height, width);
 		Container container = view.getContentPane();
 		JPanel p1 = new JPanel(new FlowLayout());
@@ -94,7 +111,9 @@ public class StartGame {
 		newPlayer.add(l);
 		model.addElement(newPlayer);
 
-		// create a custom cell renderer to properly display the playerbars
+		/**
+		 * Create a custom cell renderer to properly display the playerbars
+		 */
 		final class LCR implements ListCellRenderer {
 
 			public Component getListCellRendererComponent(JList list,
@@ -180,7 +199,7 @@ public class StartGame {
 				sb.append("<BR> Add/Remove players by clicking on the bars.");
 				sb.append("<BR> 1-4 players are allowed.");
 				sb.append("<BR>");
-				// Snake controls. 
+				// Snake controls.
 				sb.append("<BR><FONT SIZE=4>Controls</FONT>");
 				sb.append("<BR> Left/right turns it left/right in the direction the snakes are going.");
 				sb.append("<BR>");
@@ -300,6 +319,9 @@ public class StartGame {
 		model.add(idx, newPlayer);
 	}
 
+	/**
+	 * Part of the GUI-playerbar that shows when you add remove players.
+	 */
 	private static class PlayerBar extends JToolBar {
 
 		PlayerBar() {
@@ -359,7 +381,7 @@ public class StartGame {
 
 		// Create the starting powerups and the like.
 		placeStartObjects();
-		
+
 		footer.setText(" ");
 
 		// Start a 3 second countdown before the game starts.
@@ -397,7 +419,7 @@ public class StartGame {
 			ActAndDraw actor = field.getObjectAt(newLoc);
 			Random rand = new Random();
 			boolean underground = false;
-			if(rand.nextDouble() < 0.15){
+			if (rand.nextDouble() < 0.15) {
 				underground = true;
 			}
 			if (actor != null) {// Check if the snake will be moved to a
@@ -405,7 +427,7 @@ public class StartGame {
 				if (actor instanceof Powerup) {
 					// Try to place a new power up on the field. If one can't be
 					// placed in 5 tries give up.
-					
+
 					int n = 0;
 					boolean placed = false;
 					while (!placed && n < 5) {
@@ -451,8 +473,9 @@ public class StartGame {
 			String rgb = Integer.toHexString(winner.getColor().getRGB());
 			rgb = rgb.substring(2, rgb.length());
 			ImageIcon icon = new ImageIcon("gameover.png");
-			JOptionPane.showMessageDialog(view, "<HTML><FONT COLOR=" + rgb + "> " + winner.getName()
-					+ "</FONT> has won! </HTML>", "Game over", JOptionPane.INFORMATION_MESSAGE, icon);
+			JOptionPane.showMessageDialog(view, "<HTML><FONT COLOR=" + rgb
+					+ "> " + winner.getName() + "</FONT> has won! </HTML>",
+					"Game over", JOptionPane.INFORMATION_MESSAGE, icon);
 			return true;
 		}
 		return false;
@@ -471,22 +494,23 @@ public class StartGame {
 		ArrayList<NSnake> players = new ArrayList<NSnake>();
 		switch (nrOfPlayers) {
 		case 4:
-			players.add(new NSnake("Player 4", Color.ORANGE, field, new Location(
-					height - 10, 10), Direction.RIGHT, new TwoControls(
-					KeyEvent.VK_V, KeyEvent.VK_B), snakeStartLength));
-		case 3:
-			players.add(new NSnake("Player 3", Color.CYAN, field, new Location(10,
-					width - 10), Direction.LEFT, new TwoControls(KeyEvent.VK_I,
-					KeyEvent.VK_O),
+			players.add(new NSnake("Player 4", Color.ORANGE, field,
+					new Location(height - 10, 10), Direction.RIGHT,
+					new TwoControls(KeyEvent.VK_V, KeyEvent.VK_B),
 					snakeStartLength));
+		case 3:
+			players.add(new NSnake("Player 3", Color.CYAN, field, new Location(
+					10, width - 10), Direction.LEFT, new TwoControls(
+					KeyEvent.VK_I, KeyEvent.VK_O), snakeStartLength));
 		case 2:
 			players.add(new NSnake("Player 2", Color.RED, field, new Location(
-					height - 10, width - 10), Direction.LEFT,
-					new TwoControls(KeyEvent.VK_A, KeyEvent.VK_S), snakeStartLength));
+					height - 10, width - 10), Direction.LEFT, new TwoControls(
+					KeyEvent.VK_A, KeyEvent.VK_S), snakeStartLength));
 		case 1:
 			players.add(new NSnake("Player 1", Color.MAGENTA, field,
 					new Location(10, 10), Direction.RIGHT, new TwoControls(
-							KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT), snakeStartLength));
+							KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT),
+					snakeStartLength));
 			break;
 		default:
 			throw new IllegalArgumentException(nrOfPlayers

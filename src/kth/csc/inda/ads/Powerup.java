@@ -9,8 +9,11 @@ import kth.csc.inda.ads.snake.NSnake;
 
 /**
  * An interface class for the power up objects in the game.
- * @author Janne
  * 
+ * @author Janne Selkälä
+ * @author Jesper Simonsson
+ * @author Milosz Wielondek
+ * @version 2013-05-12
  */
 interface Powerup extends ActAndDraw {
 

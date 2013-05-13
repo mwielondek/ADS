@@ -1,9 +1,10 @@
 package kth.csc.inda.ads;
 
 /**
- * 
- * @author jsimo
- *
+ * @author Janne Selkälä
+ * @author Jesper Simonsson
+ * @author Milosz Wielondek
+ * @version 2013-05-10
  */
 public class Controls {
 	private int up, down, left, right;
@@ -15,9 +16,9 @@ public class Controls {
 		this.right = right;
 	}
 	
-	// ######
+	// 
 	// Below is the get methods for the 4 snake controls.
-	// ######
+	// 
 
 	public int up() {
 		return up;
