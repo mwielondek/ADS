@@ -198,21 +198,16 @@ public class NSnake {
 	 */
 	private void addFirst(Location loc, boolean underground) {
 		// Replace the current first segment with a body instead of head.
-		NSnakeSeg oldHead = body.getFirst();
-		if (oldHead instanceof NSnakeSegHead) {
-			body.removeFirst();
-			body.addFirst(new NSnakeSegBody(this, oldHead.getLoc()));
-			field.place(body.getFirst(), body.getFirst().getLoc());
-		}
-		// Creates the new segment to add.
-		NSnakeSeg newSeg;
-		if (underground) {
-			newSeg = new NSnakeSegEmpty(this, loc);
+		NSnakeSeg oldHead = body.removeFirst();
+		if(underground){
+			body.addFirst(new NSnakeSegEmpty(this, oldHead.getLoc()));
 		} else {
-			newSeg = new NSnakeSegHead(this, loc);
+			body.addFirst(new NSnakeSegBody(this, oldHead.getLoc()));
 		}
-		body.addFirst(newSeg);
-		field.place(newSeg, loc);
+		field.place(body.getFirst(), body.getFirst().getLoc());
+		// Creates the new segment to add.
+		body.addFirst(new NSnakeSegHead(this, loc));
+		field.place(body.getFirst(), loc);
 	}
 
 	private void removeLast() {
