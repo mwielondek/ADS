@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import kth.csc.inda.ads.snake.Direction;
 import kth.csc.inda.ads.snake.NSnake;
 
 public class View extends JFrame implements KeyListener {

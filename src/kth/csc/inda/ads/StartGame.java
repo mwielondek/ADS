@@ -392,12 +392,17 @@ public class StartGame {
 			NSnake p = players.get(i);
 			Location newLoc = p.getNextMove();
 			ActAndDraw actor = field.getObjectAt(newLoc);
+			Random rand = new Random();
+			boolean underground = false;
+			if(rand.nextDouble() < 0.15){
+				underground = true;
+			}
 			if (actor != null) {// Check if the snake will be moved to a
 								// occupied location
 				if (actor instanceof Powerup) {
 					// Try to place a new power up on the field. If one can't be
 					// placed in 5 tries give up.
-					Random rand = new Random();
+					
 					int n = 0;
 					boolean placed = false;
 					while (!placed && n < 5) {
@@ -412,10 +417,10 @@ public class StartGame {
 					}
 				}
 				if (actor.act(p)) {
-					p.move(newLoc);
+					p.move(newLoc, underground);
 				}
 			} else {
-				p.move(newLoc);
+				p.move(newLoc, underground);
 			}
 			System.out.println(p);
 			if (!p.isAlive()) {

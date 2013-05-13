@@ -3,7 +3,6 @@ package kth.csc.inda.ads.snake;
 import java.awt.Color;
 import java.util.LinkedList;
 
-import kth.csc.inda.ads.Controls;
 import kth.csc.inda.ads.Location;
 import kth.csc.inda.ads.NField;
 import kth.csc.inda.ads.TwoControls;
@@ -144,7 +143,7 @@ public class NSnake {
 	/**
 	 * Move the snake to the location provided.
 	 */
-	public void move(Location newLoc) {
+	public void move(Location newLoc, boolean underground) {
 		int col = newLoc.getCol();
 		int row = newLoc.getRow();
 
@@ -156,7 +155,7 @@ public class NSnake {
 		}
 
 		// Add the new location to snakes body.
-		addFirst(newLoc);
+		addFirst(newLoc, underground);
 
 		while (body.size() > maxLength) {
 			// Remove the corresponding segment and field if the snake is to
@@ -197,12 +196,21 @@ public class NSnake {
 	/**
 	 * Adds a new segment at the specified locations.
 	 */
-	private void addFirst(Location loc) {
+	private void addFirst(Location loc, boolean underground) {
 		// Replace the current first segment with a body instead of head.
-		body.addFirst(new NSnakeSegBody(this, body.removeFirst().getLoc()));
-		field.place(body.getFirst(), body.getFirst().getLoc());
+		NSnakeSeg oldHead = body.getFirst();
+		if (oldHead instanceof NSnakeSegHead) {
+			body.removeFirst();
+			body.addFirst(new NSnakeSegBody(this, oldHead.getLoc()));
+			field.place(body.getFirst(), body.getFirst().getLoc());
+		}
 		// Creates the new segment to add.
-		NSnakeSeg newSeg = new NSnakeSegHead(this, loc);
+		NSnakeSeg newSeg;
+		if (underground) {
+			newSeg = new NSnakeSegEmpty(this, loc);
+		} else {
+			newSeg = new NSnakeSegHead(this, loc);
+		}
 		body.addFirst(newSeg);
 		field.place(newSeg, loc);
 	}
