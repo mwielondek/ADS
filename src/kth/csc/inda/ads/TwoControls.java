@@ -15,14 +15,24 @@ public class TwoControls {
 	}
 	
 	//
-	// Below is the get methods for the 2 snake controls.
+	// Below is the set and get methods for the 2 snake controls.
 	//
 
 	public int right() {
 		return right;
 	}
-	
+
+	public void setRight(int right) {
+		this.right = right;
+	}
+
 	public int left() {
 		return left;
 	}
+
+	public void setLeft(int left) {
+		this.left = left;
+	}
+	
+
 }

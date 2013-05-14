@@ -54,7 +54,9 @@ public class StartGame {
 	private static final int height = 90;
 	private static final int width = 90;
 	private static final int snakeStartLength = 5;
+	private static Random rand = new Random();
 	private static int nrOfPlayers;
+	private static boolean timeForFood = false;
 	private static final int MAX_PLAYERS = 4;
 	private static final Color[] PLAYER_COLORS = { Color.MAGENTA, Color.RED,
 			Color.CYAN, Color.ORANGE };
@@ -211,6 +213,8 @@ public class StartGame {
 				sb.append("<BR><FONT SIZE=4> Powerups</FONT>");
 				sb.append("<BR><FONT COLOR=BLACK>Black </FONT> dots are bombs, kills you.");
 				sb.append("<BR><FONT COLOR=GREEN> Green </FONT> dots are food, makes you longer.");
+				sb.append("<BR><FONT COLOR=PINK> 1 </FONT><FONT COLOR=RED> 2 </FONT><FONT COLOR=BLUE> 3 </FONT><FONT COLOR=ORANGE> 4 </FONT> </FONT> dots changes the colors of the snakes.");
+				sb.append("<BR><FONT COLOR=BLACK> 1 </FONT> <FONT COLOR=YELLOW> 2 </FONT> dots inverts everyones but yours controls.");
 				sb.append("</HTML>");
 				ImageIcon icon = new ImageIcon("info.png");
 				JOptionPane.showMessageDialog(view, sb.toString(),
@@ -332,33 +336,6 @@ public class StartGame {
 	}
 
 	/**
-	 * Resets everything that needs to be reset.
-	 */
-	private static void reset() {
-		field.clear();
-	}
-
-	/**
-	 * Places all the starting objects on the field.
-	 */
-	private static void placeStartObjects() {
-		// Place a set number of food objects on the field
-		Random rand = new Random();
-		for (int i = 0; i < nrOfPlayers + 2; i++) {
-			Location temp = new Location(rand.nextInt(width),
-					rand.nextInt(height));
-			if (field.getObjectAt(temp) == null) {
-				field.place(new PowUpFood(), temp);
-			} else {
-				i--;
-			}
-		}
-
-		// Add a bomb in the middle of the field.
-		field.place(new Bomb(), new Location(width / 2, height / 2));
-	}
-
-	/**
 	 * Starts a new game with a specified amount of players.
 	 * 
 	 * @param nrOfPlayers
@@ -408,6 +385,75 @@ public class StartGame {
 	}
 
 	/**
+	 * Resets everything that needs to be reset.
+	 */
+	private static void reset() {
+		field.clear();
+	}
+
+	/**
+	 * Places all the starting objects on the field.
+	 */
+	private static void placeStartObjects() {
+		// Place a set number of food objects on the field
+		for (int i = 0; i < nrOfPlayers + 2; i++) {
+			Location temp = new Location(rand.nextInt(width),
+					rand.nextInt(height));
+			if (field.getObjectAt(temp) == null) {
+				field.place(new PowUpFood(), temp);
+			} else {
+				i--;
+			}
+		}
+	}
+
+	/**
+	 * Places a random powerup on the field.
+	 */
+	private static void placeRandomPowUp() {
+		// To add a new typs of powerup, increase the number and
+		// add a new case for creating it.
+		int numberOfPowUp = 3;
+		int num;
+		if (timeForFood) {
+			num = 1;
+			timeForFood = false;
+		} else {
+			num = rand.nextInt(numberOfPowUp) + 1;
+			timeForFood = true;
+		}
+		switch (num) {
+		case 1:
+			placePowUp(new PowUpFood());
+			break;
+		case 2:
+			placePowUp(new PowUpSwitchColors(players));
+			break;
+		case 3:
+			placePowUp(new PowUpInvControls(players));
+		default:
+			System.out.println("This should never be printed");
+			break;
+		}
+		
+	}
+
+	/**
+	 * Tries placing ONE powerup on the board.
+	 */
+	private static void placePowUp(Powerup pu) {
+		for (int i = 0; i < 5; i++) {
+			Location loc = new Location(rand.nextInt(width),
+					rand.nextInt(height));
+			// If the spot is free place the objects and break the loop.
+			if (field.getObjectAt(loc) == null) {
+				field.place(pu, loc);
+				break;
+			}
+		}
+	}
+
+	/**
 	 * Call it to move the snakes once. Also handles all the logic.
 	 * 
 	 * @throws InterruptedException
@@ -419,7 +465,7 @@ public class StartGame {
 			ActAndDraw actor = field.getObjectAt(newLoc);
 			Random rand = new Random();
 			boolean underground = false;
-			if (rand.nextDouble() < 0.15) {
+			if (rand.nextDouble() < 0.10) {
 				underground = true;
 			}
 			if (actor != null) {// Check if the snake will be moved to a
@@ -428,18 +474,19 @@ public class StartGame {
 					// Try to place a new power up on the field. If one can't be
 					// placed in 5 tries give up.
 
-					int n = 0;
-					boolean placed = false;
-					while (!placed && n < 5) {
-						Location temp = new Location(rand.nextInt(width),
-								rand.nextInt(height));
-						if (field.getObjectAt(temp) != null) {
-							n++;
-						} else {
-							field.place(new PowUpFood(), temp);
-							placed = true;
-						}
-					}
+					placeRandomPowUp();
+//					int n = 0;
+//					boolean placed = false;
+//					while (!placed && n < 5) {
+//						Location temp = new Location(rand.nextInt(width),
+//								rand.nextInt(height));
+//						if (field.getObjectAt(temp) != null) {
+//							n++;
+//						} else {
+//							field.place(new PowUpFood(), temp);
+//							placed = true;
+//						}
+//					}
 				}
 				if (actor.act(p)) {
 					p.move(newLoc, underground);
